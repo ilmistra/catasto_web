@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+Il servizio di consultazione della mappe catastali in formato WMS è disponibile con licenza CC BY 4.0.
+L’Agenzia delle Entrate non è responsabile per qualunque tipo di danno diretto, indiretto o
+accidentale derivante dall’impiego delle informazioni raccolte tramite questo servizio.
+https://www.agenziaentrate.gov.it/portale/it/web/guest/schede/fabbricatiterreni/consultazione-cartografia-catastale/servizio-consultazione-cartografia
+-->
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="description" content="Visualizzatore open-source e free delle mappe catastali esposte con licenza CC-BY-4.0">
+<meta name="keywords" content="Catasto, Agenzia delle Entrate, Particelle, Mappali">
+<meta name="author" content="Paolo Mistrangelo">
+<title>Catasto - Leaflet</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4-src.min.js"></script>
+<style type="text/css">
+	#mapid, html, body {
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+</head>
+<body>
+	<div id="mapid"></div>
+	<script type="text/javascript">
+	proj4.defs("WGS84", "+proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees");
+	proj4.defs("EPSG:6706", "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs");
+
+	var mymap = L.map('mapid').setView([42.30, 12.80], 6);
+	
+	var tms_example = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:"<a href='https://operations.osmfoundation.org/policies/tiles/'>&copy; OSM</a>"}).addTo(mymap);
+	
+	L.TileLayer.Catasto = L.TileLayer.extend({
+	getTileUrl: function(coords) {
+  			return "https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/ows01.php?language=ita&service=WMS&version=1.3.0&request=GetMap&bbox="+bbox(coords.x,coords.y,coords.z)+"&crs=EPSG:6706&width=256&height=256&layers=province,CP.CadastralZoning,acque,CP.CadastralParcel,fabbricati,codice_plla,simbolo_graffa&styles=default&format=image/png&DPI=96&map_resolution=96&format_options=dpi:96&transparent=true"
+  		},
+    getAttribution: function() {
+        return "<a href='https://www.agenziaentrate.gov.it/portale/it/web/guest/schede/fabbricatiterreni/consultazione-cartografia-catastale/servizio-consultazione-cartografia'>Agenzie delle Entrate</a>"
+    }
+	});
+
+	L.tileLayer.Catasto = function() {
+    	return new L.TileLayer.Catasto();
+	}
+
+	L.tileLayer.Catasto().addTo(mymap);
+	
+	function bbox(x,y,z) {
+		bl_lng=tile2long(x,z);
+		tr_lng=tile2long((x+1),z);
+		bl_lat=tile2lat(y+1,z);
+		tr_lat=tile2lat((y),z);
+		bl=proj4("WGS84","EPSG:6706",[bl_lng,bl_lat]);
+		tr=proj4("WGS84","EPSG:6706",[tr_lng,tr_lat]);
+		return bl[1]+","+bl[0]+","+tr[1]+","+tr[0];
+	}
+	function tile2long(x,z) { 
+		return (x/Math.pow(2,z)*360-180);
+	}
+	function tile2lat(y,z) {
+    	var n=Math.PI-2*Math.PI*y/Math.pow(2,z);
+    	return (180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n))));
+	}
+</script>
+</body>
+</html>
