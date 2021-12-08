@@ -7,6 +7,6 @@ Per utlizzare lo script è necessario integrare, nella chiamata alla libreria di
 
 https://cloud.google.com/maps-platform
 
-Versione per Leaftlet (consultazione libera)
+Versione per Leaftlet (consultazione libera) in <b>cataleaf.html</b>
 visualizzabile al link www.fastmap.it/catasto.html
 
