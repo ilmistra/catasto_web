@@ -9,5 +9,5 @@ Per utlizzare lo script è necessario integrare, nella chiamata alla libreria di
 https://cloud.google.com/maps-platform
 
 Versione per Leaftlet (consultazione libera)
-cataleaf.html
+www.fastmap.it/catasto.html
 
