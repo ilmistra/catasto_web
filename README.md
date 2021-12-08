@@ -1,7 +1,6 @@
 Visualizzatore webgis delle mappe del Catasto Terreni Italiano
 
-Versione per Google Maps (necessita API Google)
-catasto.html
+Versione per Google Maps (necessita API Google) in <b>catasto.html</b>
 
 Lo script consente la visualizzazione su Google Maps delle mappe del Catasto Terreni rese disponibili dall'Agenzia delle Entrate in modalità WMS con licenza CC-BY-4.0
 Per utlizzare lo script è necessario integrare, nella chiamata alla libreria di Google Maps (alla riga 13), una propria chiave API ottenibile alla pagina
@@ -9,5 +8,5 @@ Per utlizzare lo script è necessario integrare, nella chiamata alla libreria di
 https://cloud.google.com/maps-platform
 
 Versione per Leaftlet (consultazione libera)
-www.fastmap.it/catasto.html
+visualizzabile al link www.fastmap.it/catasto.html
 
